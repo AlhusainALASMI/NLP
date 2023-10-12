@@ -20,7 +20,7 @@ def train(task, input_filename, model_dump_filename):
     model = DumbModel(X, y)
     model.fit()
     model.calculate_accuracy()
-    print((model.cv_scores))
+    print((model.accuracy))
 
     return model.dump(model_dump_filename)
 

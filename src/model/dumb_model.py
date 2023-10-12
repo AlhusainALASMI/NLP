@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from joblib import *
 import numpy as np
 class DumbModel:
@@ -10,13 +11,13 @@ class DumbModel:
     def __init__(self, X, y, test_size=0.2, random_state=42):
         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(X, y, test_size, random_state)
         self.clf = None  # Store the classifier
-        self.cv_scores = None  # Store cross-validation scores
+        self.accuracy = None  # Store cross-validation scores
 
     def split_data(self, X, y, test_size, random_state):
         return train_test_split(X, y, test_size=test_size, random_state=random_state)
 
     def fit(self):
-        self.clf = DecisionTreeClassifier(max_depth=None, min_samples_split=2, min_samples_leaf=1).fit(self.X_train, self.y_train)
+        self.clf = RandomForestClassifier().fit(self.X_train, self.y_train)
 
     def predict(self, X):
         # This function predicts using the trained classifier
@@ -28,23 +29,27 @@ class DumbModel:
         # X_new_tfidf = tfidf_transformer.transform(X_new_counts)
 
 
-
         # Predict
         predictions = self.clf.predict(X)
 
         return predictions
 
-    def calculate_accuracy(self, cv=5):
-        # Calculate accuracy using cross-validation
+    def calculate_accuracy(self):
+        # Calculate and return the accuracy of the model
         if self.clf is None:
             raise ValueError("Classifier not trained. Call the 'fit' method first.")
+        y_pred = self.predict(self.X_test)
+        correct_predictions = (y_pred == self.y_test).sum()
+        total_predictions = len(self.y_test)
+        self.accuracy = correct_predictions / total_predictions
 
-        predictions = self.predict(self.X_test)
-        predictions.reshape(-1, 1)
-        predictions = predictions[:, np.newaxis]  # Convert predictions to a 2D array
-        y_test_2d = self.y_test.to_numpy()[:, np.newaxis]
+    # def cross_validate(self, cv=5):
+    #     # Perform cross-validation and return an array of accuracy scores
+    #     if self.clf is None:
+    #         raise ValueError("Classifier not trained. Call the 'fit' method first.")
+    #     cv_scores = cross_val_score(self.clf, self.X_train, self.y_train, cv=cv)
+    #     return cv_scores
 
-        self.cv_scores = cross_val_score(self.clf, predictions, y_test_2d, cv=cv)
 
     def dump(self, filename_output):
         # Save the trained classifier to a file
