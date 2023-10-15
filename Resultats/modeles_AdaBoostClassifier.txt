@@ -1,0 +1,56 @@
+Model 1
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: count_vectorizer
+Scores: 0.85, 0.90625, 0.93125, 0.9375, 0.949685534591195
+Moyenne des scores: 0.914937106918239
+
+Model 2
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: count_vectorizer, stemming
+Scores: 0.84375, 0.9125, 0.94375, 0.9375, 0.949685534591195
+Moyenne des scores: 0.917437106918239
+
+Model 3
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: count_vectorizer, stop words
+Scores: 0.8375, 0.93125, 0.9375, 0.9375, 0.9371069182389937
+Moyenne des scores: 0.9161713836477986
+
+Model 4
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: TF-IDF
+Scores: 0.84375, 0.91875, 0.95, 0.9375, 0.9119496855345912
+Moyenne des scores: 0.9123899371069182
+
+Model 5
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: count_vectorizer, stemming, stop words
+Scores: 0.84375, 0.9375, 0.93125, 0.9375, 0.9371069182389937
+Moyenne des scores: 0.9174213836477987
+
+Model 6
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: stemming, TF-IDF
+Scores: 0.8375, 0.8875, 0.9625, 0.91875, 0.89937106918239
+Moyenne des scores: 0.901124213836478
+
+Model 7
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: stop words, TF-IDF
+Scores: 0.83125, 0.925, 0.93125, 0.9125, 0.9119496855345912
+Moyenne des scores: 0.9023899371069183
+
+Model 8
+Model Ada Boost Classifier
+Modele utilise: Ada Boost Classifier
+Configuration utilisee: stemming, stop words, TF-IDF
+Scores: 0.8375, 0.925, 0.95, 0.91875, 0.9182389937106918
+Moyenne des scores: 0.9098977987421385
+

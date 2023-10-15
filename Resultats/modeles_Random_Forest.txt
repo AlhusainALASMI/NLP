@@ -1,0 +1,56 @@
+Model 1
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: count_vectorizer
+Scores: 0.8375, 0.88125, 0.94375, 0.9375, 0.9433962264150944
+Moyenne des scores: 0.9086792452830188
+
+Model 2
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: count_vectorizer, stemming
+Scores: 0.84375, 0.8625, 0.93125, 0.9375, 0.9433962264150944
+Moyenne des scores: 0.9036792452830189
+
+Model 3
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: count_vectorizer, stop words
+Scores: 0.85625, 0.875, 0.94375, 0.9375, 0.9371069182389937
+Moyenne des scores: 0.9099213836477986
+
+Model 4
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: TF-IDF
+Scores: 0.84375, 0.875, 0.95625, 0.94375, 0.9433962264150944
+Moyenne des scores: 0.9124292452830188
+
+Model 5
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: count_vectorizer, stemming, stop words
+Scores: 0.825, 0.875, 0.9125, 0.925, 0.9245283018867925
+Moyenne des scores: 0.8924056603773585
+
+Model 6
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: stemming, TF-IDF
+Scores: 0.8375, 0.86875, 0.95, 0.91875, 0.9371069182389937
+Moyenne des scores: 0.9024213836477987
+
+Model 7
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: stop words, TF-IDF
+Scores: 0.84375, 0.875, 0.95625, 0.94375, 0.9433962264150944
+Moyenne des scores: 0.9124292452830188
+
+Model 8
+Model Random Forest
+Modele utilise: Random Forest
+Configurations utilisees: stemming, stop words, TF-IDF
+Scores: 0.825, 0.88125, 0.95, 0.93125, 0.9371069182389937
+Moyenne des scores: 0.9049213836477987
+
