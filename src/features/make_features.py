@@ -7,23 +7,31 @@ from nltk.corpus import stopwords
 stop = stopwords.words('french')
 
 
-def make_features(df, task, stop_words=False, stemming=False):
+def make_features(df, task, Config):
+    y = get_output(df, task)
+
     X = df["video_name"]
-    y = df["is_comic"]
+
 
     if task == "is_comic_video":
         X = X.apply(lambda x: " ".join(x.lower() for x in x.split())) #chagner le code
-    if stop_words:
+    if "stop words" in Config:
         X = X.apply(lambda x: ' '.join([word for word in x.split() if word not in stop]))
 
-    if stemming:
+    if "stemming" in Config:
         stemmer = SnowballStemmer("french")
         X = X.apply(lambda x: ' '.join([stemmer.stem(word) for word in x.split()]))
 
-    vectorizer = CountVectorizer()
-    X = vectorizer.fit_transform(X)
-
-    # tfidf_transformer = TfidfTransformer()
-    # X = tfidf_transformer.fit_transform(X)
 
     return X, y
+def get_output(df, task):
+        if task == "is_comic_video":
+            y = df["is_comic"]
+        elif task == "is_name":
+            y = df["is_name"]
+        elif task == "find_comic_name":
+            y = df["comic_name"]
+        else:
+            raise ValueError("Unknown task")
+
+        return y
