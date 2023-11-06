@@ -70,8 +70,7 @@ def train(task, input_filename, model_dump_filename):
     X, y = make_features(df, task, CONFIG)
 
     model.fit(X, y)
-    ("i love sam")
-    [0, 0, 1]
+
 
     return dump(model, CONFIG, model_dump_filename)
 
@@ -134,17 +133,14 @@ def evaluate(task, input_filename):
         X_is_comic, y_is_comic = make_features(df, "is_comic_video", CONFIG)
         Model.fit(X_is_comic, y_is_comic)
 
-        # X_is_comic_test, y_is_comic_test = make_features(df_test, "is_comic_video", CONFIG)
         is_comic_predictions = Model.predict(X_is_comic)
 
         Model = make_model("is_name")
         X_is_name, y_is_name = make_features(df, "is_name", CONFIG)
         Model.fit(X_is_name, y_is_name)
 
-        # X_is_name_test, y_is_name_test = make_features(df_test, "is_name", CONFIG)
         predictions_lists = []
         cpt = 0
-
 
         for step, x in enumerate(is_comic_predictions):
             if x == 1: # if comics sentence
@@ -161,19 +157,18 @@ def evaluate(task, input_filename):
                 predictions_lists.append(([], []))
         predictions_df = pd.DataFrame({'Prediction': predictions_lists})
 
+
         cpt = 0
         accuracy = 0
         for x in range(len(predictions_df)):
-            print(predictions_df["Prediction"][x][0], ast.literal_eval(df_test["is_name"][x]), is_comic_predictions[x])
             if predictions_df["Prediction"][x][0] == []:
                 continue
             else:
                 cpt += 1
                 if predictions_df["Prediction"][x][0] == ast.literal_eval(df_test["is_name"][x]):
-                    print(predictions_df["Prediction"][x][0], df_test["is_name"][x])
                     accuracy += 1
 
-        print(accuracy / cpt)
+        exit(print(accuracy/cpt))
 
 
     model_name = "Stacking Classifier (Random Forest + MLP Classifier + Logistic Regression)"
