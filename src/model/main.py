@@ -43,16 +43,16 @@ def make_model(task):
             else:
                 print("Invalid choice")
 
-            if "TF-IDF" in Config:
-                return Pipeline([
-                    ("tfidf_vectorizer", TfidfVectorizer()),
-                    ("random_forest", AdaBoostClassifier(random_state=42)),
-                ]), Config
-            else:
-                return Pipeline([
-                    ("count_vectorizer", CountVectorizer()),
-                    ("random_forest", AdaBoostClassifier(random_state=42)),
-                ]), Config
+        if "TF-IDF" in Config:
+            return Pipeline([
+                ("tfidf_vectorizer", TfidfVectorizer()),
+                ("random_forest", AdaBoostClassifier(random_state=42)),
+            ]), Config
+        else:
+            return Pipeline([
+                ("count_vectorizer", CountVectorizer()),
+                ("random_forest", AdaBoostClassifier(random_state=42)),
+            ]), Config
 
     elif task == "is_name":
         return Pipeline([

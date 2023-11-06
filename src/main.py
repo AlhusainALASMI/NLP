@@ -17,6 +17,14 @@ import ast
 def cli():
     pass
 
+
+def get_key(my_dict, val):
+    for key, value in my_dict.items():
+        if val == value:
+            return key
+
+    return "key doesn't exist"
+
 def obtenir_prochain_numero_modele(fichier):
     try:
         with open(fichier, 'r') as f:
@@ -130,7 +138,7 @@ def evaluate(task, input_filename):
         is_comic_predictions = Model.predict(X_is_comic)
 
         Model = make_model("is_name")
-        X_is_name, y_is_name, sentences_with_id = make_features(df, "is_name", CONFIG)
+        X_is_name, y_is_name = make_features(df, "is_name", CONFIG)
         Model.fit(X_is_name, y_is_name)
 
         # X_is_name_test, y_is_name_test = make_features(df_test, "is_name", CONFIG)
@@ -140,53 +148,34 @@ def evaluate(task, input_filename):
 
         for step, x in enumerate(is_comic_predictions):
             if x == 1: # if comics sentence
-                for row in df_test["video_name"]:
-                    liste = []
-                    for x in range(len(row.split())):
-                        if cpt <= (len(X_is_name) - 1):
-                            liste.append(Model.predict(X_is_name[cpt])[0])
-                            cpt += 1
-                    predictions_lists.append((liste, row.split()))
+                row = df_test["tokens"][step]
+                row = ast.literal_eval(row)
+                liste = []
+                for x in range(len(row)):
+                    if cpt <= (len(X_is_name) - 1):
+                        liste.append(Model.predict(X_is_name[cpt])[0])
+                        cpt += 1
+
+                predictions_lists.append((liste, row))
             else:
                 predictions_lists.append(([], []))
         predictions_df = pd.DataFrame({'Prediction': predictions_lists})
-        print("here")
+
+        cpt = 0
+        accuracy = 0
+        for x in range(len(predictions_df)):
+            print(predictions_df["Prediction"][x][0], ast.literal_eval(df_test["is_name"][x]), is_comic_predictions[x])
+            if predictions_df["Prediction"][x][0] == []:
+                continue
+            else:
+                cpt += 1
+                if predictions_df["Prediction"][x][0] == ast.literal_eval(df_test["is_name"][x]):
+                    print(predictions_df["Prediction"][x][0], df_test["is_name"][x])
+                    accuracy += 1
+
+        print(accuracy / cpt)
 
 
-            #     print(X_is_name_test[step])
-            #     a = Model.predict(X_is_name_test[step])
-            #     print(a)
-            #     predictions_lists.append((a, True))
-            # else: # if not comics sentence
-            #     predictions_lists.append((None, False))
-
-        print(predictions_lists)
-
-        # for x in range(len(is_comic_predictions)):
-        #     if is_comic_predictions[x] == 1:
-        #         for row, row2 in zip(df_test["video_name"], df_test["is_name"]):
-        #             liste = []
-        #             for x in range(len(row.split())):
-        #                 if cpt <= (len(X_is_name_test) - 1):
-        #                     liste.append(Model.predict(X_is_name_test[cpt])[0])
-        #                     cpt += 1
-        #             row2 = ast.literal_eval(row2)
-        #             predictions_lists.append((liste, row.split(), row2))
-        #     else:
-        #         predictions_lists.append(([], [], []))
-        #
-        # cpt = 0
-        # predictions_df = pd.DataFrame({'Prediction': predictions_lists})
-        #
-        # find_comic_name_Accuracy = 0
-        # for i in range(len(predictions_df)):
-        #     if predictions_df.iloc[i][0][0] != [] and predictions_df.iloc[i][0][2] != []:
-        #         cpt += 1
-        #         if predictions_df.iloc[i][0][0] == predictions_df.iloc[i][0][2]:
-        #             print(predictions_df.iloc[i][0][0], predictions_df.iloc[i][0][2])
-        #             find_comic_name_Accuracy += 1
-        # find_comic_name_Accuracy = find_comic_name_Accuracy / cpt
-        # print(find_comic_name_Accuracy)
     model_name = "Stacking Classifier (Random Forest + MLP Classifier + Logistic Regression)"
 
     X, y = make_features(df, task, CONFIG)

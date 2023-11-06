@@ -19,7 +19,8 @@ def make_features(df, task, Config):
         y = y.apply(lambda x: ast.literal_eval(x))
         labels_ds, features = [], []
         sentences_with_id = {}
-        for sentence_id, (sentence, labels) in enumerate(zip(X, y)):  # Pair each word with its corresponding label
+        for sentence, labels in zip(X, y):  # Pair each word with its corresponding label
+            sentence = ast.literal_eval(sentence)
             for i, (word, word_label) in enumerate(zip(sentence, labels)):
                 feature = {
                     'word': word,
@@ -29,10 +30,9 @@ def make_features(df, task, Config):
 
                 features.append(feature)
                 labels_ds.append(word_label)
-            sentences_with_id[sentence_id] = feature
 
 
-        return features, labels_ds, sentences_with_id
+        return features, labels_ds
 
 
     elif task == "is_comic_video":
