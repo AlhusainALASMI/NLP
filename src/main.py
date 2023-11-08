@@ -1,4 +1,5 @@
 import click
+import numpy as np
 from sklearn.model_selection import cross_val_score
 import pickle
 from src.data.make_dataset import make_dataset
@@ -11,6 +12,8 @@ import ast
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.metrics import make_scorer, precision_score, recall_score, f1_score
 import ast
+#import accuracy_score
+from sklearn.metrics import accuracy_score
 
 
 @click.group()
@@ -83,33 +86,50 @@ def train(task, input_filename, model_dump_filename):
 def predict(task, input_filename, model_dump_filename, output_filename):
     df = make_dataset(input_filename)
 
-    CONFIG = None
-    Model = None
+
+
 
     load = pickle.load(open(model_dump_filename, 'rb'))
+    print(load["model"])
     if task == "is_name":
         Model = load["model"]
+        X, y = make_features(df, task, [])
+        predictions_lists = []
+        cpt = 0
+
+        for row in df["tokens"]:
+            liste = []
+            row = ast.literal_eval(row)
+            for x in range(len(row)):
+                if cpt <= (len(X) - 1):
+                    liste.append(Model.predict(X[cpt]))
+                    cpt += 1
+            predictions_lists.append((np.concatenate(liste).tolist(), row))
+
+        predictions_df = pd.DataFrame({'Prediction': predictions_lists})
+
+
+        # Save the DataFrame to a CSV file
+        return predictions_df.to_csv(output_filename, index=False)
 
     elif task == "is_comic_video":
         CONFIG = load["CONFIG"]
         Model = load["model"]
+        X, y = make_features(df, task, CONFIG)
 
-    X, y, sentences_with_id = make_features(df, task, CONFIG)
-    predictions_lists = []
-    cpt = 0
+        predictions = Model.predict(X)
+        predictions_df = pd.DataFrame({'Prediction': predictions})
 
-    for row in df["video_name"]:
-        liste = []
-        for x in range(len(row.split())):
-            if cpt <= (len(X) - 1):
-                liste.append(Model.predict(X[cpt])[0])
-                cpt += 1
-        predictions_lists.append((liste, row.split()))
+        # Save the DataFrame to a CSV file
+        return predictions_df.to_csv(output_filename, index=False)
 
-    predictions_df = pd.DataFrame({'Prediction': predictions_lists})
 
-    # Save the DataFrame to a CSV file
-    return predictions_df.to_csv(output_filename, index=False)
+
+
+
+
+
+
 
 
 
@@ -126,7 +146,7 @@ def evaluate(task, input_filename):
     if task == "is_name":
         Model = make_model(task)
     elif task == "is_comic_video":
-        Model, CONFIG = make_model(task)
+        Model, _ = make_model(task)
     elif task == "find_comic_name":
         df_test = pd.read_csv("src/data/raw/train.csv")
         Model, CONFIG = make_model("is_comic_video")
@@ -135,7 +155,7 @@ def evaluate(task, input_filename):
 
         is_comic_predictions = Model.predict(X_is_comic)
 
-        Model = make_model("is_name")
+        Model,  _ = make_model("is_name")
         X_is_name, y_is_name = make_features(df, "is_name", CONFIG)
         Model.fit(X_is_name, y_is_name)
 
@@ -143,7 +163,7 @@ def evaluate(task, input_filename):
         cpt = 0
 
         for step, x in enumerate(is_comic_predictions):
-            if x == 1: # if comics sentence
+            if x == 1:  # if comics sentence
                 row = df_test["tokens"][step]
                 row = ast.literal_eval(row)
                 liste = []
@@ -157,7 +177,6 @@ def evaluate(task, input_filename):
                 predictions_lists.append(([], []))
         predictions_df = pd.DataFrame({'Prediction': predictions_lists})
 
-
         cpt = 0
         accuracy = 0
         for x in range(len(predictions_df)):
@@ -166,9 +185,10 @@ def evaluate(task, input_filename):
             else:
                 cpt += 1
                 if predictions_df["Prediction"][x][0] == ast.literal_eval(df_test["is_name"][x]):
+                    print(predictions_df["Prediction"][x][0], ast.literal_eval(df_test["is_name"][x]))
                     accuracy += 1
 
-        exit(print(accuracy/cpt))
+        exit(print(accuracy / cpt))
 
 
     model_name = "Stacking Classifier (Random Forest + MLP Classifier + Logistic Regression)"

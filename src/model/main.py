@@ -6,6 +6,7 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -56,14 +57,14 @@ def make_model(task):
 
     elif task == "is_name":
         return Pipeline([
-            ("count_vectorizer", DictVectorizer()),
-            ("random_forest", AdaBoostClassifier(random_state=42)),
-        ])
+            ("Dict_Vectorizer", DictVectorizer()),
+            ("random_forest", AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1), random_state=42)),
+        ]), []
     elif task == "find_comic_name":
         return Pipeline([
             ("count_vectorizer", CountVectorizer()),
             ("random_forest", AdaBoostClassifier(random_state=42)),
-        ])
+        ]), []
 
 
 def dump(model, Config, filename_output):
